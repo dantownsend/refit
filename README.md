@@ -24,6 +24,7 @@ It turns out that asyncio also works great for remote server configuration too. 
 
 ```
    MACHINE A          MACHINE B
+   ---------          ---------
 (TASK A1, TASK A2)     TASK B1
        |                  |
     TASK A3               |
