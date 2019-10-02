@@ -10,39 +10,35 @@ from refit import __VERSION__ as VERSION
 directory = os.path.abspath(os.path.dirname(__file__))
 
 
-with open(os.path.join(directory, 'requirements.txt')) as f:
+with open(os.path.join(directory, "requirements.txt")) as f:
     contents = f.read()
-    REQUIREMENTS = [i.strip() for i in contents.strip().split('\n')]
+    REQUIREMENTS = [i.strip() for i in contents.strip().split("\n")]
 
 
-with open(os.path.join(directory, 'README.md')) as f:
+with open(os.path.join(directory, "README.md")) as f:
     LONG_DESCRIPTION = f.read()
 
 
 setup(
-    name='refit',
+    name="refit",
     version=VERSION,
-    description='Simple remote server configuration, using asyncio.',
+    description="Simple remote server configuration, using asyncio.",
     long_description=LONG_DESCRIPTION,
-    long_description_content_type='text/markdown',
-    author='Daniel Townsend',
-    author_email='dan@dantownsend.co.uk',
-    python_requires='>=3.7.0',
-    url='https://github.com/dantownsend/refit',
-    packages=find_packages(exclude=('tests',)),
+    long_description_content_type="text/markdown",
+    author="Daniel Townsend",
+    author_email="dan@dantownsend.co.uk",
+    python_requires=">=3.7.0",
+    url="https://github.com/dantownsend/refit",
+    packages=find_packages(exclude=("tests",)),
     install_requires=REQUIREMENTS,
-    license='MIT',
+    license="MIT",
     classifiers=[
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Development Status :: 2 - Pre-Alpha'
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Development Status :: 2 - Pre-Alpha",
     ],
-    entry_points={
-        'console_scripts': [
-            'deploy = refit.deploy:main',
-        ],
-    },
+    entry_points={"console_scripts": ["refit = refit.main:cli"]},
 )
