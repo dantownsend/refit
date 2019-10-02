@@ -11,7 +11,7 @@ task_registry = TaskRegistry()
 @task_registry.register
 class {{ titlecase_name }}(Task):
     """
-    Install the best of the best app
+    Provision {{ titlecase_name }}.
     """
 
     async def run(self):

@@ -38,7 +38,7 @@ def scaffold(deployment_name: str):
 
     for filename in ("hosts.py.jinja", "tasks.py.jinja"):
 
-        template = ENV.get_template("hosts.py.jinja")
+        template = ENV.get_template(filename)
         output_filename = filename.rsplit(".", maxsplit=1)[0]
 
         with open(os.path.join(sub_folder, output_filename), "w") as f:
