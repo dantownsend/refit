@@ -1,0 +1,6 @@
+asyncssh==1.18.0
+uvloop==0.13.0
+jinja2==2.10.1
+aiohttp==2.3.7
+termcolor==1.1.0
+click==7.0
