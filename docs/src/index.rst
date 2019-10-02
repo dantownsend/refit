@@ -3,13 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to refit's documentation!
+Welcome to Refit's documentation!
 ======================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   refit/introduction.rst
+   refit/example_project.rst
+   refit/modules.rst
 
 
 Indices and tables
@@ -18,15 +21,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-.. automodule:: refit.task
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-.. automodule:: refit.deploy
-    :members:
-    :undoc-members:
-    :show-inheritance:

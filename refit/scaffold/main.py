@@ -12,7 +12,7 @@ ENV = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 
 def make_titlecase(text: str) -> str:
-    return text.title().replace(" ", "")
+    return text.title().replace(" ", "").replace("_", "")
 
 
 def scaffold(deployment_name: str):
