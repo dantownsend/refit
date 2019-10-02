@@ -2,6 +2,8 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
+from .. import __VERSION__
+
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
@@ -31,7 +33,7 @@ def scaffold(deployment_name: str):
 
     render_kwargs = {
         "titlecase_name": make_titlecase(deployment_name),
-        "refit_version": "0.0.2",
+        "refit_version": __VERSION__,
     }
 
     for filename in ("hosts.py.jinja", "tasks.py.jinja"):
