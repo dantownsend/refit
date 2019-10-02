@@ -12,6 +12,8 @@ Welcome to Refit's documentation!
 
    refit/introduction.rst
    refit/example_project.rst
+   refit/mixins.rst
+   refit/advanced_sequencing.rst
    refit/modules.rst
 
 

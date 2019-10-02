@@ -1,13 +1,13 @@
 import asyncio
 import math
 import time
+import typing as t
 
 import asyncssh
 from termcolor import colored
 
 
-class ConnectionPool():
-
+class ConnectionPool:
     def __init__(self, username, host):
         self.username = username
         self.host = host
@@ -23,11 +23,7 @@ class ConnectionPool():
         """
         if not self.connections:
             connection = await asyncio.wait_for(
-                asyncssh.connect(
-                    self.host,
-                    username=self.username
-                ),
-                10
+                asyncssh.connect(self.host, username=self.username), 10
             )
 
             self.connections.append(connection)
@@ -38,47 +34,35 @@ class ConnectionPool():
         """
         Close all the connections.
         """
-        print('closing ...')
+        print("closing ...")
         for connection in self.connections:
             connection.close()
-        print('closed...')
+        print("closed...")
 
 
-class Host():
+class Host:
 
     # Override in subclasses:
-    username = None
-    host = None
-    environment_vars = {}
+    username: t.Optional[str] = None
+    host: t.Optional[str] = None
+    environment_vars: t.Dict[str, t.Any] = {}
 
     def __init__(self, tasks):
         self.tasks = tasks
 
         if (not self.username) or (not self.host):
-            raise ValueError('Define user and host!')
+            raise ValueError("Define user and host!")
 
-        self.connection_pool = ConnectionPool(
-            self.username,
-            self.host,
-        )
+        self.connection_pool = ConnectionPool(self.username, self.host)
 
     def get_connection(self):
         return self.connection_pool.get_connection()
 
     async def entrypoint(self):
-        message = f'Running tasks for {self.host}'
-        line_length = int(
-            (100 - len(message)) / 2
-        )
-        line = ''.join(
-            ['=' for i in range(line_length)]
-        )
-        print(
-            colored(
-                f'{line} {message} {line}',
-                'magenta'
-            )
-        )
+        message = f"Running tasks for {self.host}"
+        line_length = int((100 - len(message)) / 2)
+        line = "".join(["=" for i in range(line_length)])
+        print(colored(f"{line} {message} {line}", "magenta"))
         await self.run()
 
     async def run(self):
@@ -89,14 +73,7 @@ class Host():
         for task in self.tasks:
             await task(self).entrypoint()
 
-        time_taken = math.floor(
-            time.time() - start_time
-        )
-        print(
-            colored(
-                f'Tasks tooks {time_taken} seconds',
-                'blue'
-            )
-        )
+        time_taken = math.floor(time.time() - start_time)
+        print(colored(f"Tasks tooks {time_taken} seconds", "blue"))
 
         self.connection_pool.close()

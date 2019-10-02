@@ -35,7 +35,7 @@ Hosts
 
 In the hosts file, we define the remote machines we want to connect to.
 
-It's important that each ``Host`` gets registered with the ``HostsRegistry``.
+It's important that each ``Host`` gets registered with the ``HostRegistry``.
 The recommended way of doing this is using the decorator syntax.
 
 .. hint:: Refit uses SSH to communicate with remote servers. In order to access
@@ -50,7 +50,7 @@ Tasks are what get run on hosts. Examples are uploading files, or running a
 bash command.
 
 Similarly to ``Hosts``, it's important that each ``Task`` gets registered with
-the ``TasksRegistry``, otherwise it won't get run.
+the ``TaskRegistry``, otherwise it won't get run.
 
 The order in which a ``Task`` is added to the registry determines the order
 in which it runs.

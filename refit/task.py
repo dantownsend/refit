@@ -13,14 +13,14 @@ from .mixins.template import TemplateMixin
 
 
 class Task(
-        AptMixin,
-        DockerMixin,
-        FileMixin,
-        PathMixin,
-        PythonMixin,
-        SystemdMixin,
-        TemplateMixin):
-
+    AptMixin,
+    DockerMixin,
+    FileMixin,
+    PathMixin,
+    PythonMixin,
+    SystemdMixin,
+    TemplateMixin,
+):
     def __init__(self, host):
         self.host = host
 
@@ -29,19 +29,10 @@ class Task(
         Called instead of run - so we don't have to use super() from every
         run method.
         """
-        message = f'Task {self.__class__.__name__}'
-        line_length = int(
-            (100 - len(message)) / 2
-        )
-        line = ''.join(
-            ['-' for i in range(line_length)]
-        )
-        print(
-            colored(
-                f'{line} {message} {line}',
-                'cyan'
-            )
-        )
+        message = f"Task {self.__class__.__name__}"
+        line_length = int((100 - len(message)) / 2)
+        line = "".join(["-" for i in range(line_length)])
+        print(colored(f"{line} {message} {line}", "cyan"))
         await self.run()
 
     async def run(self) -> None:
@@ -49,7 +40,7 @@ class Task(
         Override in subclasses. This is what does the actual work in the task,
         and is awaited when the Task is run.
         """
-        print('Override me ...')
+        print("Override me ...")
 
     ###########################################################################
 
@@ -62,12 +53,7 @@ class Task(
     ###########################################################################
 
     def _print_command(self, command: str) -> None:
-        print(
-            colored(
-                f'{command}',
-                'green'
-            )
-        )
+        print(colored(f"{command}", "green"))
 
     async def _run(self, command, raise_exception=True):
         started_at = time.time()
@@ -80,31 +66,28 @@ class Task(
         finished_at = time.time()
         took = finished_at - started_at
 
-        self._print_command(f'Running: {command}')
+        self._print_command(f"Running: {command}")
 
-        stdout = colored(result.stdout, 'magenta')
-        stderr = colored(result.stderr, 'red')
+        stdout = colored(result.stdout, "magenta")
+        stderr = colored(result.stderr, "red")
 
         print(
-            f'Started at:  {started_at}\n'
-            f'Finished at: {finished_at}\n'
-            f'Took:        {took} seconds\n'
-            f'{stdout}'
-            f'{stderr}'
+            f"Started at:  {started_at}\n"
+            f"Finished at: {finished_at}\n"
+            f"Took:        {took} seconds\n"
+            f"{stdout}"
+            f"{stderr}"
         )
 
         if (result.exit_status == 1) and raise_exception:
-            raise Exception(f'Command - {command} returned 1 result code!')
+            raise Exception(f"Command - {command} returned 1 result code!")
 
         return result
 
 
 class Gathered(Task):
-
     async def run(self):
-        await asyncio.gather(
-            *[task(self.host).run() for task in self.tasks]
-        )
+        await asyncio.gather(*[task(self.host).run() for task in self.tasks])
 
 
 def new_gathered_task(tasks: list) -> Gathered:
@@ -113,7 +96,5 @@ def new_gathered_task(tasks: list) -> Gathered:
 
     :param tasks: A list of Task objects to execute.
     """
-    name = '+'.join(
-        [task.__name__ for task in tasks]
-    )
-    return type(name, (Gathered,), {'tasks': tasks})
+    name = "+".join([task.__name__ for task in tasks])
+    return type(name, (Gathered,), {"tasks": tasks})
