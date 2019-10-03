@@ -9,10 +9,16 @@ import uvloop
 
 from .task import Task
 from .host import Host
+from .registry import HostRegistry, TaskRegistry
 from .scaffold import scaffold as _scaffold
 
 
-async def run_hosts(tasks: t.List[Task], hosts: t.List[Host]) -> None:
+async def run_hosts(
+    tasks: t.List[t.Type[Task]], hosts: t.List[t.Type[Host]]
+) -> None:
+    """
+    Execute all the tasks on the hosts.
+    """
     await asyncio.gather(*[host(tasks).entrypoint() for host in hosts])
 
 
@@ -40,7 +46,6 @@ def deploy(deployment_name: str, environment: str) -> None:
     """
     Starts running your deployment tasks.
     """
-    breakpoint()
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
 
@@ -51,7 +56,11 @@ def deploy(deployment_name: str, environment: str) -> None:
         f"deployments.{deployment_name}.hosts"
     )
 
-    hosts = hosts_module.host_registry.members.get(environment)
+    host_registry: HostRegistry = getattr(hosts_module, "host_registry", None)
+    if not host_registry:
+        raise Exception("Can't find 'host_registry' in hosts file.")
+
+    hosts = host_registry.members.get(environment)
 
     if not hosts:
         print(colored(f"No hosts defined for {environment}!", "red"))
@@ -64,9 +73,11 @@ def deploy(deployment_name: str, environment: str) -> None:
     for host in hosts:
         host.environment = environment
 
-    loop.run_until_complete(
-        run_hosts(tasks_module.task_registry.members, hosts)
-    )
+    task_registry: TaskRegistry = getattr(tasks_module, "task_registry", None)
+    if not task_registry:
+        raise Exception("Can't find 'task_registry' in tasks file.")
+
+    loop.run_until_complete(run_hosts(task_registry.members, hosts))
 
 
 if __name__ == "__main__":

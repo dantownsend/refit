@@ -6,6 +6,8 @@ import typing as t
 import asyncssh
 from termcolor import colored
 
+from .task import Task
+
 
 class ConnectionPool:
     def __init__(self, username, host):
@@ -47,7 +49,7 @@ class Host:
     host: t.Optional[str] = None
     environment_vars: t.Dict[str, t.Any] = {}
 
-    def __init__(self, tasks):
+    def __init__(self, tasks: t.Iterable[t.Type[Task]]):
         self.tasks = tasks
 
         if (not self.username) or (not self.host):
