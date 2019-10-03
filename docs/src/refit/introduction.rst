@@ -38,6 +38,8 @@ In the hosts file, we define the remote machines we want to connect to.
 It's important that each ``Host`` gets registered with the ``HostRegistry``.
 The recommended way of doing this is using the decorator syntax.
 
+.. literalinclude:: ../../../example_project/deployments/pet_shop/hosts.py
+
 .. hint:: Refit uses SSH to communicate with remote servers. In order to access
    your remote servers, make sure your SSH public key is present in the
    ``known_hosts`` file on each remote server. For example,
@@ -49,11 +51,22 @@ Tasks
 Tasks are what get run on hosts. Examples are uploading files, or running a
 bash command.
 
-Similarly to ``Hosts``, it's important that each ``Task`` gets registered with
+Similarly to ``Host``, it's important that each ``Task`` gets registered with
 the ``TaskRegistry``, otherwise it won't get run.
+
+.. literalinclude:: ../../../example_project/deployments/pet_shop/tasks.py
 
 The order in which a ``Task`` is added to the registry determines the order
 in which it runs.
+
+run
+~~~
+
+Each Task has an ``async run`` method, which performs the actual work.
+
+You can do whatever you like within this method, but a lot of the time you'll
+be calling other Task methods, which implement the bulk of Refit's
+functionality. Under the hood, these are implemented as :ref:`Mixins`.
 
 Running tasks
 -------------

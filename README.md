@@ -1,12 +1,14 @@
 # Refit
 
+[![Documentation Status](https://readthedocs.org/projects/refit/badge/?version=latest)](https://refit.readthedocs.io/en/latest/?badge=latest)
+
 Simple remote server configuration, using asyncio.
 
 ## Why Refit?
 
 As a die hard Ansible user for many years, I started looking for something slightly different.
 
-Because of Docker, most of my deployments have become simpler. It usually involves uploading some files (e.g. ``docker-compose.yaml``), and running some shell commands (e.g. ``docker-compose up``). As a result, I don't need most of the modules that Ansible provides.
+Because of Docker, most of my deployments have become simpler. It usually involves uploading some files (e.g. `docker-compose.yaml`), and running some shell commands (e.g. `docker-compose up`). As a result, I don't need most of the modules that Ansible provides.
 
 One thing I originally found great about Ansible was being able to configure it purely in YAML. This is nice when you're getting started. As your projects get larger though, you yearn for the control that code gives you. For example, rather than having to learn the particular syntax for performing 'for loops' in YAML, just do it naturally in Python.
 
