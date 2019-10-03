@@ -13,6 +13,7 @@ Welcome to Refit's documentation!
    refit/introduction.rst
    refit/mixins.rst
    refit/task_sequencing.rst
+   refit/labels.rst
    refit/modules.rst
 
 

@@ -53,6 +53,7 @@ class Host:
     host: t.Optional[str] = None
     environment_vars: t.Dict[str, t.Any] = {}
     connection_params: t.Dict[str, t.Any] = {}
+    labels: t.Iterable[str] = []
 
     def __init__(self, tasks: t.Iterable[t.Type[Task]]):
         self.tasks = tasks

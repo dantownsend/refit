@@ -22,6 +22,8 @@ class Task(
     SystemdMixin,
     TemplateMixin,
 ):
+    labels: t.Iterable[str] = []
+
     def __init__(self, host):
         self.host = host
 

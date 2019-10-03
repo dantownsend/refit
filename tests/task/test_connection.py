@@ -28,7 +28,7 @@ class TaskOne(Task):
         RESPONSE = (await self.raw("cat /etc/os-release")).stdout
 
 
-class TestDecorator:
+class TestConnection:
     async def run_tasks(self):
         await DockerHost(tasks=registry.members).run()
 
