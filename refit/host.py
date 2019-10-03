@@ -10,9 +10,10 @@ from .task import Task
 
 
 class ConnectionPool:
-    def __init__(self, username, host):
+    def __init__(self, username, host, **connection_params):
         self.username = username
         self.host = host
+        self.connection_params = connection_params
 
         self.connections = []
 
@@ -25,7 +26,10 @@ class ConnectionPool:
         """
         if not self.connections:
             connection = await asyncio.wait_for(
-                asyncssh.connect(self.host, username=self.username), 10
+                asyncssh.connect(
+                    self.host, username=self.username, **self.connection_params
+                ),
+                10,
             )
 
             self.connections.append(connection)
@@ -48,6 +52,7 @@ class Host:
     username: t.Optional[str] = None
     host: t.Optional[str] = None
     environment_vars: t.Dict[str, t.Any] = {}
+    connection_params: t.Dict[str, t.Any] = {}
 
     def __init__(self, tasks: t.Iterable[t.Type[Task]]):
         self.tasks = tasks
@@ -55,7 +60,9 @@ class Host:
         if (not self.username) or (not self.host):
             raise ValueError("Define user and host!")
 
-        self.connection_pool = ConnectionPool(self.username, self.host)
+        self.connection_pool = ConnectionPool(
+            self.username, self.host, **self.connection_params
+        )
 
     def get_connection(self):
         return self.connection_pool.get_connection()

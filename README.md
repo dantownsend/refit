@@ -36,3 +36,7 @@ It turns out that asyncio also works great for remote server configuration too. 
 Using async, we can fire off tasks A1, A2, and B1 simultaneously. Once complete, we then fire off task A3, and finally task B2. Refit will orchestrate the tasks so the servers are provisioned as quickly as possible.
 
 It also means you can use all the exciting new asyncio libraries within your code.
+
+## Props
+
+Built on top of the great work done in [asyncssh](https://github.com/ronf/asyncssh).

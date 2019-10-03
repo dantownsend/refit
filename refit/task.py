@@ -45,9 +45,9 @@ class Task(
 
     ###########################################################################
 
-    async def raw(self, command, raise_exception=True):
+    async def raw(self, command: str, raise_exception=True):
         """
-        What does this do??? Vs just _run???
+        Execute a raw shell command on the remote server.
         """
         return await self._run(command, raise_exception)
 
@@ -56,7 +56,10 @@ class Task(
     def _print_command(self, command: str) -> None:
         print(colored(f"{command}", "green"))
 
-    async def _run(self, command, raise_exception=True):
+    async def _run(self, command: str, raise_exception=True):
+        """
+        Runs the command on the host.
+        """
         started_at = time.time()
         connection = await self.host.get_connection()
 
@@ -87,11 +90,15 @@ class Task(
 
 
 class Gathered(Task):
+    """
+    Bundles several tasks to be run concurrently.
+    """
+
     async def run(self):
         await asyncio.gather(*[task(self.host).run() for task in self.tasks])
 
 
-def new_gathered_task(tasks: t.Iterable[Task]) -> Gathered:
+def new_gathered_task(tasks: t.Iterable[t.Type[Task]]) -> t.Type[Gathered]:
     """
     Task definitions are classes, not instances, hence why we require this.
 
