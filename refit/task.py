@@ -1,5 +1,6 @@
 import asyncio
 import time
+import typing as t
 
 from termcolor import colored
 
@@ -90,7 +91,7 @@ class Gathered(Task):
         await asyncio.gather(*[task(self.host).run() for task in self.tasks])
 
 
-def new_gathered_task(tasks: list) -> Gathered:
+def new_gathered_task(tasks: t.Iterable[Task]) -> Gathered:
     """
     Task definitions are classes, not instances, hence why we require this.
 

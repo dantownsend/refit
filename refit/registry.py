@@ -1,41 +1,32 @@
-from .task import new_gathered_task
+from .task import new_gathered_task, Task
 
 
-class TaskRegistry():
-
+class TaskRegistry:
     def __init__(self):
         self.members = []
 
-    def gather(self, *tasks):
+    def gather(self, *tasks: Task) -> None:
         """
-        Makes the tasks operate concurrently.
+        Register tasks, which will execute concurrently.
         """
-        self.members.append(
-            new_gathered_task(tasks)
-        )
+        self.members.append(new_gathered_task(tasks))
 
-    def register(self, *members):
+    def register(self, *members) -> None:
         """
-        Helper for registering tasks / hosts etc.
-
+        Register tasks for execution.
         """
         self.members.extend(members)
         # If used as a decorator:
         return self.members[0]
 
 
-class HostRegistry():
-
+class HostRegistry:
     def __init__(self):
-        self.members = {
-            'production': [],
-            'test': []
-        }
+        self.members = {"production": [], "test": []}
 
-    def register(self, environment: str = 'production', *members):
+    def register(self, environment: str = "production", *members) -> None:
         """
-        Helper for registering tasks / hosts etc.
-
+        Register hosts as possible deployment targets.
         """
         if members:
             self.members[environment].extend(members)

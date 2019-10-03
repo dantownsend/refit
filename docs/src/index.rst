@@ -12,7 +12,7 @@ Welcome to Refit's documentation!
 
    refit/introduction.rst
    refit/mixins.rst
-   refit/advanced_sequencing.rst
+   refit/task_sequencing.rst
    refit/modules.rst
 
 
