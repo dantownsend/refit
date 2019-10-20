@@ -12,4 +12,4 @@ class PythonMixin:
         await self._python_exists()
         await self._pip_exists()
 
-        await self._run(f"pip3 install {package}")
+        await self.raw(f"pip3 install {package}")

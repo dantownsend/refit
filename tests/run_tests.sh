@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pytest -s
+pytest -s --cov=refit --cov-report=html $@

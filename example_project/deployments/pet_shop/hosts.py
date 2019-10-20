@@ -7,13 +7,13 @@ from refit.registry import HostRegistry
 host_registry = HostRegistry()
 
 
-@host_registry.register('production')
+@host_registry.register("production")
 class PetShopProduction(Host):
-    host = '127.0.0.1'
+    address = "127.0.0.1"
     environment_vars = {}
 
 
-@host_registry.register('test')
+@host_registry.register("test")
 class PetShopTest(Host):
-    host = '127.0.0.1'
+    address = "127.0.0.1"
     environment_vars = {}

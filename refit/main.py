@@ -13,15 +13,6 @@ from .registry import HostRegistry, TaskRegistry
 from .scaffold import scaffold as _scaffold
 
 
-async def run_hosts(
-    tasks: t.List[t.Type[Task]], hosts: t.List[t.Type[Host]]
-) -> None:
-    """
-    Execute all the tasks on the hosts.
-    """
-    await asyncio.gather(*[host(tasks).entrypoint() for host in hosts])
-
-
 @click.group()
 def cli():
     pass
@@ -60,7 +51,7 @@ def deploy(deployment_name: str, environment: str) -> None:
     if not host_registry:
         raise Exception("Can't find 'host_registry' in hosts file.")
 
-    hosts = host_registry.members.get(environment)
+    hosts = host_registry.hosts.get(environment)
 
     if not hosts:
         print(colored(f"No hosts defined for {environment}!", "red"))
@@ -77,7 +68,11 @@ def deploy(deployment_name: str, environment: str) -> None:
     if not task_registry:
         raise Exception("Can't find 'task_registry' in tasks file.")
 
-    loop.run_until_complete(run_hosts(task_registry.members, hosts))
+    loop.run_until_complete(
+        host_registry.run_tasks(
+            tasks=task_registry.task_classes, environment=environment
+        )
+    )
 
 
 if __name__ == "__main__":

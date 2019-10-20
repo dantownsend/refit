@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import math
 import time
@@ -6,13 +8,14 @@ import typing as t
 import asyncssh
 from termcolor import colored
 
-from .task import Task
+if t.TYPE_CHECKING:
+    from .task import Task
 
 
 class ConnectionPool:
     def __init__(self, username, host, **connection_params):
         self.username = username
-        self.host = host
+        self.address = host
         self.connection_params = connection_params
 
         self.connections = []
@@ -27,7 +30,9 @@ class ConnectionPool:
         if not self.connections:
             connection = await asyncio.wait_for(
                 asyncssh.connect(
-                    self.host, username=self.username, **self.connection_params
+                    self.address,
+                    username=self.username,
+                    **self.connection_params
                 ),
                 10,
             )
@@ -50,40 +55,27 @@ class Host:
 
     # Override in subclasses:
     username: t.Optional[str] = None
-    host: t.Optional[str] = None
+    address: t.Optional[str] = None
     environment_vars: t.Dict[str, t.Any] = {}
+    environment: t.Optional[str] = None
     connection_params: t.Dict[str, t.Any] = {}
-    labels: t.Iterable[str] = []
+    tags: t.Iterable[str] = []
 
-    def __init__(self, tasks: t.Iterable[t.Type[Task]]):
-        self.tasks = tasks
+    connection_pool: t.Optional[ConnectionPool] = None
 
-        if (not self.username) or (not self.host):
-            raise ValueError("Define user and host!")
-
-        self.connection_pool = ConnectionPool(
-            self.username, self.host, **self.connection_params
-        )
-
+    @classmethod
     def get_connection(self):
         return self.connection_pool.get_connection()
 
-    async def entrypoint(self):
-        message = f"Running tasks for {self.host}"
-        line_length = int((100 - len(message)) / 2)
-        line = "".join(["=" for i in range(line_length)])
-        print(colored(f"{line} {message} {line}", "magenta"))
-        await self.run()
+    @classmethod
+    def start_connection_pool(cls):
+        if (not cls.username) or (not cls.address):
+            raise ValueError("Define username and address!")
 
-    async def run(self):
-        start_time = time.time()
+        cls.connection_pool = ConnectionPool(
+            cls.username, cls.address, **cls.connection_params
+        )
 
-        # The top level of self.tasks is synchronous, hence why it's in a
-        # loop and not asyncio.gather.
-        for task in self.tasks:
-            await task(self).entrypoint()
-
-        time_taken = math.floor(time.time() - start_time)
-        print(colored(f"Tasks tooks {time_taken} seconds", "blue"))
-
-        self.connection_pool.close()
+    @classmethod
+    def close_connection_pool(cls):
+        cls.connection_pool.close()

@@ -1,26 +1,30 @@
 import asyncio
 
 from refit.task import Task
-from refit.registry import TaskRegistry
+from refit.registry import TaskRegistry, HostRegistry
 from refit.host import Host
 
 
 COMPLETED = []
 
 
+host_registry = HostRegistry()
+task_registry = TaskRegistry()
+
+
+@host_registry.register(environment="production")
 class DummyHost(Host):
     username = "foo"
-    host = "localhost"
+    address = "localhost"
 
 
-registry = TaskRegistry()
-
-
+@task_registry.register
 class TaskOne(Task):
     async def run(self):
         COMPLETED.append(self.__class__.__name__)
 
 
+@task_registry.register
 class TaskTwo(Task):
     async def run(self):
         COMPLETED.append(self.__class__.__name__)
@@ -28,7 +32,9 @@ class TaskTwo(Task):
 
 class TestTasks:
     async def run_tasks(self):
-        await DummyHost(tasks=registry.members).run()
+        await host_registry.run_tasks(
+            task_registry.task_classes, environment="production"
+        )
 
     @classmethod
     def setup_class(cls):
@@ -39,6 +45,5 @@ class TestTasks:
         """
         Makes sure the tasks get executed in the correct sequence.
         """
-        registry.register(TaskOne, TaskTwo)
         asyncio.run(self.run_tasks())
         assert COMPLETED == ["TaskOne", "TaskTwo"]

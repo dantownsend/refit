@@ -1,16 +1,20 @@
 import asyncio
 
 from refit.task import Task
-from refit.registry import TaskRegistry
+from refit.registry import TaskRegistry, HostRegistry
 from refit.host import Host
 
 
 COMPLETED = []
 
 
+host_registry = HostRegistry()
+
+
+@host_registry.register()
 class DummyHost(Host):
     username = "foo"
-    host = "localhost"
+    address = "localhost"
 
 
 registry = TaskRegistry()
@@ -24,7 +28,9 @@ class TaskOne(Task):
 
 class TestDecorator:
     async def run_tasks(self):
-        await DummyHost(tasks=registry.members).run()
+        await TaskOne.create(
+            host_registry=host_registry, environment="production"
+        )
 
     def test_decorator(self):
         asyncio.run(self.run_tasks())

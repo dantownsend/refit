@@ -1,8 +1,10 @@
 import json
 import typing as t
 
+from .base import MixinBase
 
-class DockerMixin:
+
+class DockerMixin(MixinBase):
     async def pull_docker_image(self, image_name: str) -> None:
         await self.raw(f"docker pull {image_name}")
 

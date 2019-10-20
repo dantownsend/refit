@@ -1,31 +1,35 @@
 import asyncio
 
 from refit.task import Task
-from refit.registry import TaskRegistry
+from refit.registry import TaskRegistry, HostRegistry
 from refit.host import Host
 
 
-registry = TaskRegistry()
+host_registry = HostRegistry()
+task_registry = TaskRegistry()
 
 
 COMPLETED = []
 
 
+@host_registry.register(tags=["database"])
 class DummyHost(Host):
     username = "foo"
-    host = "localhost"
+    address = "localhost"
 
 
-@registry.register(labels=["database"])
+@task_registry.register(tags=["database"])
 class TaskOne(Task):
     async def run(self):
         global RESPONSE
         COMPLETED.append(self.__class__.__name__)
 
 
-class TestLabels:
+class TestTags:
     async def run_tasks(self):
-        await DummyHost(tasks=registry.members).run()
+        await host_registry.run_tasks(
+            task_registry.task_classes, environment="production"
+        )
 
     def test_decorator(self):
         asyncio.run(self.run_tasks())

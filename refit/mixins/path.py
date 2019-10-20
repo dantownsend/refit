@@ -1,4 +1,7 @@
-class PathMixin:
+from .base import MixinBase
+
+
+class PathMixin(MixinBase):
     """
     Utilities for inspecting the path on the remote machine.
     """
@@ -7,7 +10,7 @@ class PathMixin:
         """
         Check whether an executable is available on the path.
         """
-        response = await self._run(f"which {executable}")
+        response = await self.raw(f"which {executable}")
 
         if (response.exit_status == 1) and raise_exception:
             raise Exception(f"{executable} doesn't exist!")

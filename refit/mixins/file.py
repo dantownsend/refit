@@ -2,8 +2,10 @@ import os
 
 import asyncssh
 
+from .base import MixinBase
 
-class FileMixin:
+
+class FileMixin(MixinBase):
     async def create_file(self, path: str) -> None:
         """
         Create an empty file on the remote server.
