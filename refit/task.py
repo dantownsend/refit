@@ -12,7 +12,6 @@ from .mixins.docker import DockerMixin
 from .mixins.file import FileMixin
 from .mixins.path import PathMixin
 from .mixins.python import PythonMixin
-from .mixins.systemd import SystemdMixin
 from .mixins.template import TemplateMixin
 
 if t.TYPE_CHECKING:
@@ -21,13 +20,7 @@ if t.TYPE_CHECKING:
 
 
 class Task(
-    AptMixin,
-    DockerMixin,
-    FileMixin,
-    PathMixin,
-    PythonMixin,
-    SystemdMixin,
-    TemplateMixin,
+    AptMixin, DockerMixin, FileMixin, PathMixin, PythonMixin, TemplateMixin
 ):
     tags: t.Iterable[str] = ["all"]
     sub_tasks: t.Iterable[Task] = []

@@ -29,9 +29,10 @@ class DockerHost(Host):
 class TaskOne(Task):
     async def run(self):
         await self.apt_update()
+        await self.apt_install("apt-utils")
         await self.apt_install("rolldice")
         global RESPONSE
-        RESPONSE = (await self.raw("cat /etc/os-release")).stdout
+        RESPONSE = (await self.raw("/usr/games/rolldice -v")).stdout
 
 
 class TestConnection:
@@ -48,4 +49,4 @@ class TestConnection:
 
     def test_apt_install(self):
         asyncio.run(self.run_tasks())
-        assert "Ubuntu" in RESPONSE
+        assert "rolldice" in RESPONSE
