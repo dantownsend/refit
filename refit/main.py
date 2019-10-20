@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import os
 import sys
 import typing as t
 
@@ -13,6 +14,10 @@ from .registry import HostRegistry, TaskRegistry
 from .scaffold import scaffold as _scaffold
 
 
+def alter_path():
+    sys.path = [os.getcwd()] + sys.path
+
+
 @click.group()
 def cli():
     pass
@@ -24,6 +29,7 @@ def scaffold(deployment_name) -> None:
     """
     Creates a deployment template.
     """
+    alter_path()
     print(deployment_name)
     _scaffold(deployment_name)
 
@@ -37,6 +43,7 @@ def deploy(deployment_name: str, environment: str) -> None:
     """
     Starts running your deployment tasks.
     """
+    alter_path()
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
 
@@ -51,7 +58,7 @@ def deploy(deployment_name: str, environment: str) -> None:
     if not host_registry:
         raise Exception("Can't find 'host_registry' in hosts file.")
 
-    hosts = host_registry.hosts.get(environment)
+    hosts = host_registry.host_class_map.get(environment)
 
     if not hosts:
         print(colored(f"No hosts defined for {environment}!", "red"))

@@ -49,7 +49,7 @@ class FileMixin(MixinBase):
         """
         full_local_path = os.path.join(root, local_path)
 
-        connection = await self.host.get_connection()
+        connection = await self.host_class.get_connection()
 
         self._print_command(f"Uploading: {local_path} -> {remote_path}\n")
 

@@ -14,7 +14,9 @@ class TaskRegistry:
     def __init__(self):
         self.task_classes = []
 
-    def gather(self, *task_classes: t.Type[Task]) -> None:
+    def gather(
+        self, *task_classes: t.Type[Task], tags: t.Iterable[str] = ["all"]
+    ) -> None:
         """
         Register tasks, which will execute concurrently.
         """

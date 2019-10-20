@@ -36,7 +36,7 @@ class TemplateMixin:
         with open(tmp_file_path, "w") as f:
             f.write(contents)
 
-        connection = await self.host.get_connection()
+        connection = await self.host_class.get_connection()
 
         self._print_command(f"Uploading: {local_path} -> {remote_path}\n")
 

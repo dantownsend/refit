@@ -104,20 +104,14 @@ class Task(
             # check=True
         )
         finished_at = time.time()
-        took = finished_at - started_at
+        took = round(finished_at - started_at, 4)
 
         self._print_command(f"Running: {command}")
 
         stdout = colored(result.stdout, "magenta")
         stderr = colored(result.stderr, "red")
 
-        print(
-            f"Started at:  {started_at}\n"
-            f"Finished at: {finished_at}\n"
-            f"Took:        {took} seconds\n"
-            f"{stdout}"
-            f"{stderr}"
-        )
+        print(f"Took: {took} seconds\n{stdout}\n{stderr}\n")
 
         if (result.exit_status == 1) and raise_exception:
             raise Exception(f"Command - {command} returned 1 result code!")
@@ -132,18 +126,11 @@ class Concurrent(Task):
 
     async def run(self):
         await asyncio.gather(
-            *[task(self.host_registry).entrypoint() for task in self.sub_tasks]
+            *[
+                task(host_class=self.host_class).run()
+                for task in self.sub_tasks
+            ]
         )
-
-
-class Sequential(Task):
-    """
-    Bundles several tasks to be run sequentially.
-    """
-
-    async def run(self):
-        for task in self.sub_tasks:
-            await task(self.host_registry).entrypoint()
 
 
 def new_gathered_task(tasks: t.Iterable[t.Type[Task]]) -> t.Type[Concurrent]:
