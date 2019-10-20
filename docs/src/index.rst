@@ -14,6 +14,7 @@ Welcome to Refit's documentation!
    refit/mixins.rst
    refit/task_sequencing.rst
    refit/tags.rst
+   refit/contributing.rst
    refit/modules.rst
 
 
