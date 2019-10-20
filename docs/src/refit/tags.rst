@@ -14,7 +14,7 @@ matching tag. An example tag is ``'database'``, for a database server.
     task_registry = TaskRegistry()
     task_registry.register(TaskOne, tags=['database'])
 
-    @task_registry.register(['load_balancer'])
+    @task_registry.register(tags=['load_balancer'])
     class TaskTwo(Task):
         async def run(self):
             print("Running on load_balancer servers")

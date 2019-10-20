@@ -5,11 +5,13 @@ import uuid
 import asyncssh
 import jinja2
 
+from .base import MixinBase
+
 
 ENVIRONMENT = jinja2.Environment(enable_async=True)
 
 
-class TemplateMixin:
+class TemplateMixin(MixinBase):
     async def upload_template(
         self,
         local_path: str,

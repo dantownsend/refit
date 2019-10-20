@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/refit/badge/?version=latest)](https://refit.readthedocs.io/en/latest/?badge=latest)
 
-Simple remote server configuration, using asyncio.
+Simple remote server configuration, using asyncio. [Read the Docs](https://refit.readthedocs.io/en/latest/).
 
 ## Why Refit?
 
