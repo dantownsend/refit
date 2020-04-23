@@ -30,6 +30,12 @@ setup(
     python_requires=">=3.7.0",
     url="https://github.com/dantownsend/refit",
     packages=find_packages(exclude=("tests",)),
+    package_data={
+        'refit': [
+            'scaffold/files/*.md',
+            'scaffold/templates/*.jinja'
+        ]
+    },
     install_requires=REQUIREMENTS,
     license="MIT",
     classifiers=[
