@@ -4,44 +4,42 @@ import os
 import sys
 import typing as t
 
-import click
+from targ import CLI
 from termcolor import colored
 import uvloop
 
-from .task import Task
-from .host import Host
-from .registry import HostRegistry, TaskRegistry
-from .scaffold import scaffold as _scaffold
+from refit.task import Task
+from refit.host import Host
+from refit.registry import HostRegistry, TaskRegistry
+from refit.scaffold import scaffold as _scaffold
 
 
 def alter_path():
     sys.path = [os.getcwd()] + sys.path
 
 
-@click.group()
-def cli():
-    pass
-
-
-@cli.command()
-@click.argument("deployment_name")
-def scaffold(deployment_name) -> None:
+def scaffold(deployment_name: str):
     """
     Creates a deployment template.
+
+    :param deployment_name:
+        The name of the new deployment to create.
+
     """
     alter_path()
     print(deployment_name)
     _scaffold(deployment_name)
 
 
-@cli.command()
-@click.argument("deployment_name")
-@click.option(
-    "-e", "--environment", default="production", help="production or test"
-)
-def deploy(deployment_name: str, environment: str) -> None:
+def deploy(deployment_name: str, environment: str = 'production'):
     """
     Starts running your deployment tasks.
+
+    :param deployment_name:
+        The deployment to deploy.
+    :param environment:
+        For example 'production' or 'test'.
+
     """
     alter_path()
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -82,5 +80,12 @@ def deploy(deployment_name: str, environment: str) -> None:
     )
 
 
+def command_line():
+    cli = CLI(description="Refit CLI")
+    cli.register(scaffold)
+    cli.register(deploy)
+    cli.run()
+
+
 if __name__ == "__main__":
-    cli()
+    command_line()

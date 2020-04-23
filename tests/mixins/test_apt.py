@@ -22,7 +22,7 @@ class DockerHost(Host):
 
     username = "root"
     address = "localhost"
-    connection_params = {"password": "root"}
+    connection_params = {"password": "root", "known_hosts": None}
 
 
 @task_registry.register
