@@ -43,7 +43,6 @@ def deploy(deployment_name: str, environment: str = 'production'):
     """
     alter_path()
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-    loop = asyncio.get_event_loop()
 
     tasks_module = importlib.import_module(
         f"deployments.{deployment_name}.tasks"
@@ -73,7 +72,7 @@ def deploy(deployment_name: str, environment: str = 'production'):
     if not task_registry:
         raise Exception("Can't find 'task_registry' in tasks file.")
 
-    loop.run_until_complete(
+    asyncio.run(
         host_registry.run_tasks(
             tasks=task_registry.task_classes, environment=environment
         )
