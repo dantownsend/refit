@@ -16,10 +16,11 @@ task_registry = TaskRegistry()
 COMPLETED = []
 
 
-@host_registry.register(environment="production", tags=["database"])
-class DummyHost(Host):
-    username = "foo"
-    address = "localhost"
+host_registry.register(
+    Host(name="DummyHost", username="foo", address="localhost"),
+    environment="production",
+    tags=["database"],
+)
 
 
 class TaskOne(Task):
@@ -28,13 +29,13 @@ class TaskOne(Task):
         COMPLETED.append(self.__class__.__name__)
 
 
-task_registry.register(TaskOne, tags=["database"])
+task_registry.register(TaskOne(), tags=["database"])
 
 
 class TestTags:
     async def run_tasks(self):
         await host_registry.run_tasks(
-            tasks=task_registry.task_classes, environment="production"
+            tasks=task_registry.tasks, environment="production"
         )
 
     def test_register_with_function(self):

@@ -12,28 +12,29 @@ host_registry = HostRegistry()
 task_registry = TaskRegistry()
 
 
-@host_registry.register(environment="production")
-class DummyHost(Host):
-    username = "foo"
-    address = "localhost"
+host_registry.register(
+    Host(name="DummyHost", username="foo", address="localhost"),
+    environment="production",
+)
 
 
-@task_registry.register
 class TaskOne(Task):
     async def run(self):
         COMPLETED.append(self.__class__.__name__)
 
 
-@task_registry.register
 class TaskTwo(Task):
     async def run(self):
         COMPLETED.append(self.__class__.__name__)
 
 
+task_registry.register(TaskOne(), TaskTwo())
+
+
 class TestTasks:
     async def run_tasks(self):
         await host_registry.run_tasks(
-            task_registry.task_classes, environment="production"
+            task_registry.tasks, environment="production"
         )
 
     @classmethod

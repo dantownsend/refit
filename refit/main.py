@@ -2,14 +2,11 @@ import asyncio
 import importlib
 import os
 import sys
-import typing as t
 
 from targ import CLI
 from termcolor import colored
 import uvloop
 
-from refit.task import Task
-from refit.host import Host
 from refit.registry import HostRegistry, TaskRegistry
 from refit.scaffold import scaffold as _scaffold
 
@@ -31,7 +28,7 @@ def scaffold(deployment_name: str):
     _scaffold(deployment_name)
 
 
-def deploy(deployment_name: str, environment: str = 'production'):
+def deploy(deployment_name: str, environment: str = "production"):
     """
     Starts running your deployment tasks.
 
@@ -55,7 +52,7 @@ def deploy(deployment_name: str, environment: str = 'production'):
     if not host_registry:
         raise Exception("Can't find 'host_registry' in hosts file.")
 
-    hosts = host_registry.host_class_map.get(environment)
+    hosts = host_registry.host_map.get(environment)
 
     if not hosts:
         print(colored(f"No hosts defined for {environment}!", "red"))
@@ -74,7 +71,7 @@ def deploy(deployment_name: str, environment: str = 'production'):
 
     asyncio.run(
         host_registry.run_tasks(
-            tasks=task_registry.task_classes, environment=environment
+            tasks=task_registry.tasks, environment=environment
         )
     )
 

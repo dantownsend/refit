@@ -14,18 +14,17 @@ host_registry = HostRegistry()
 task_registry = TaskRegistry()
 
 
-@host_registry.register(environment="production")
-class DockerHost(Host):
-    """
-    Connects to a SSH server running under Docker.
-    """
+host_registry.register(
+    Host(
+        name="DockerHost",
+        username="root",
+        address="localhost",
+        connection_params={"password": "root", "known_hosts": None},
+    ),
+    environment="production",
+)
 
-    username = "root"
-    address = "localhost"
-    connection_params = {"password": "root", "known_hosts": None}
 
-
-@task_registry.register
 class TaskOne(Task):
     async def run(self):
         await self.apt_update()
@@ -33,6 +32,9 @@ class TaskOne(Task):
         await self.apt_install("rolldice")
         global RESPONSE
         RESPONSE = (await self.raw("/usr/games/rolldice -v")).stdout
+
+
+task_registry.register(TaskOne())
 
 
 class TestConnection:
@@ -44,7 +46,7 @@ class TestConnection:
 
     async def run_tasks(self):
         await host_registry.run_tasks(
-            task_registry.task_classes, environment="production"
+            task_registry.tasks, environment="production"
         )
 
     def test_apt_install(self):
