@@ -1,3 +1,4 @@
+import importlib
 import math
 import time
 import typing as t
@@ -9,9 +10,25 @@ from .host import Host
 from .task import new_gathered_task, Task
 
 
+class CommandRegistry:
+    def __init__(self, deployments: t.Dict[str, str]):
+        self.commands = deployments
+        self.command_funcs = {}
+
+        for deployment_name, path in deployments.items():
+            module_path, func_name = path.split(":")
+            module = importlib.import_module(module_path)
+            func = getattr(module, func_name)
+            self.command_funcs[deployment_name] = func
+
+
 class TaskRegistry:
     def __init__(self, host_registry):
         self.tasks = []
+        self.host_registry = host_registry
+
+    def print_tasks(self):
+        print("\n".join([i.__class__.__name__ for i in self.tasks]))
 
     def gather(self, *tasks: Task, tags: t.List[str] = ["all"]) -> None:
         """
@@ -26,6 +43,20 @@ class TaskRegistry:
         for task in tasks:
             task.tags = tags
         self.tasks.extend(tasks)
+
+    async def run(self, environment: str):
+        """
+        Execute the tasks for each matching host.
+        """
+        start_time = time.time()
+
+        for task in self.tasks:
+            await task.create(
+                host_registry=self.host_registry, environment=environment
+            )
+
+        time_taken = math.floor(time.time() - start_time)
+        print(colored(f"Tasks tooks {time_taken} seconds", "blue"))
 
 
 class HostRegistry:
@@ -61,15 +92,3 @@ class HostRegistry:
                 if set(host.tags).intersection(set(tags)):
                     output.append(host)
             return output
-
-    async def run_tasks(self, tasks: t.List[Task], environment: str):
-        """
-        Create and execute a Task for each matching host.
-        """
-        start_time = time.time()
-
-        for task in tasks:
-            await task.create(host_registry=self, environment=environment)
-
-        time_taken = math.floor(time.time() - start_time)
-        print(colored(f"Tasks tooks {time_taken} seconds", "blue"))

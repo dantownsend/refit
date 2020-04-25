@@ -3,7 +3,7 @@ class PythonMixin:
         await self.in_path(f"python3", raise_exception=True)
 
     async def _pip_exists(self) -> None:
-        await self.in_path(f"pip3", raise_exception=True)
+        await self.in_path(f"pip", raise_exception=True)
 
     async def pip(self, package: str) -> None:
         """

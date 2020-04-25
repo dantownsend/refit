@@ -9,7 +9,7 @@ RESPONSE = ""
 
 
 host_registry = HostRegistry()
-task_registry = TaskRegistry()
+task_registry = TaskRegistry(host_registry)
 
 
 host_registry.register(
