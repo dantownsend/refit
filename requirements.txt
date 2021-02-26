@@ -1,6 +1,6 @@
 asyncssh==2.2.1
 uvloop==0.14.0
 jinja2==2.11.2
-aiohttp==3.6.2
+aiohttp==3.7.4
 termcolor==1.1.0
 targ==0.1.3
